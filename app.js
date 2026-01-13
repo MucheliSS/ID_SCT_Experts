@@ -213,11 +213,38 @@ class ExpertApp {
     async submitToGoogleSheets(data) {
         const scriptUrl = window.GOOGLE_SCRIPT_URL;
 
-        if (!scriptUrl || scriptUrl === 'https://script.google.com/macros/s/AKfycbxvn6i2N6Q4aOaKX1lK9RpFrPkUfNWEEmdgWC_xfx2Jf9k4fgqbmwUeXRGz8fAxl9gqMA/exec') {
+        if (!scriptUrl || scriptUrl.includes('YOUR_SCRIPT_URL_HERE')) {
             console.log('Google Sheets integration not configured. Skipping submission.');
             this.showToast('Responses recorded locally (Google Sheets not configured)', 'info');
             return;
         }
+
+        try {
+            this.showToast('Submitting responses...', 'info');
+
+            // Send data as JSON to Google Apps Script
+            const response = await fetch(scriptUrl, {
+                method: 'POST',
+                mode: 'no-cors', // Required for Google Apps Script
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                redirect: 'follow',
+                body: JSON.stringify(data)
+            });
+
+            // Note: no-cors mode means we can't read the response
+            // but the request will succeed if the server accepts it
+            console.log('Submission sent to Google Sheets');
+            this.showToast('Responses submitted successfully!', 'success');
+
+        } catch (error) {
+            console.error('Error submitting to Google Sheets:', error);
+            this.showToast('Error submitting responses. Please try again.', 'error');
+            throw error; // Re-throw so the UI doesn't proceed if submission fails
+        }
+    }
 
         try {
             // Use form submission approach for better CORS compatibility
