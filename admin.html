@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SCT Admin Dashboard - View Expert Responses and Generate Scoring Key">
+    <title>SCT Admin Dashboard | TTSH ID</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Admin-specific styles -->
+    <style>
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .stat-card__value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card__label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .scoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .scoring-table th,
+        .scoring-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .scoring-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .scoring-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .scoring-table .modal {
+            background: rgba(139, 92, 246, 0.2);
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        .distribution-bar {
+            display: flex;
+            height: 20px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: var(--bg-secondary);
+        }
+
+        .distribution-bar__segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .distribution-bar__segment[data-value="-2"] {
+            background: var(--scale-negative-2);
+        }
+
+        .distribution-bar__segment[data-value="-1"] {
+            background: var(--scale-negative-1);
+        }
+
+        .distribution-bar__segment[data-value="0"] {
+            background: var(--scale-neutral);
+        }
+
+        .distribution-bar__segment[data-value="+1"] {
+            background: var(--scale-positive-1);
+        }
+
+        .distribution-bar__segment[data-value="+2"] {
+            background: var(--scale-positive-2);
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+            margin-top: var(--spacing-lg);
+        }
+
+        .expert-list {
+            display: grid;
+            gap: var(--spacing-sm);
+        }
+
+        .expert-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-glass);
+            border-radius: var(--radius-md);
+            align-items: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-muted);
+        }
+
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-muted);
+        }
+
+        .case-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .case-section__title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        textarea.export-output {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: monospace;
+            font-size: 0.875rem;
+            padding: var(--spacing-md);
+            resize: vertical;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <span class="header__badge">Admin Dashboard</span>
+            <div class="header__logo">TTSH Infectious Diseases Department</div>
+            <h1 class="header__title">SCT Scoring Key Generator</h1>
+            <p class="header__subtitle">View expert responses and generate scoring rubric</p>
+        </header>
+
+        <!-- Configuration -->
+        <div class="card">
+            <h2 class="card__title">
+                <svg class="card__title-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+                </svg>
+                Data Source
+            </h2>
+            <div class="form-group">
+                <label class="form-label" for="sheet-url">Google Sheet URL or ID</label>
+                <input type="text" id="sheet-url" class="form-input"
+                    placeholder="Paste your Google Sheet URL or ID here">
+            </div>
+            <p class="text-muted" style="font-size: 0.875rem; margin-bottom: var(--spacing-md);">
+                Note: For demo purposes, you can also manually paste expert response data below, or use the sample data
+                button.
+            </p>
+            <div class="export-buttons">
+                <button class="btn btn-primary" id="btn-load-sample">Load Sample Data</button>
+                <button class="btn btn-secondary" id="btn-fetch-sheet">Fetch from Sheet</button>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="admin-grid" id="stats-container" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-card__value" id="stat-experts">0</div>
+                <div class="stat-card__label">Experts Responded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card__value" id="stat-items">30</div>
+                <div class="stat-card__label">SCT Items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card__value" id="stat-consensus">0%</div>
+                <div class="stat-card__label">Avg Consensus</div>
+            </div>
+        </div>
+
+        <!-- Expert List -->
+        <div class="card" id="experts-card" style="display: none;">
+            <h2 class="card__title">Expert Panel</h2>
+            <div class="expert-list" id="expert-list">
+                <!-- Expert list rendered here -->
+            </div>
+        </div>
+
+        <!-- Scoring Key -->
+        <div class="card" id="scoring-card" style="display: none;">
+            <h2 class="card__title">Generated Scoring Key</h2>
+            <div id="scoring-key-container">
+                <!-- Scoring key rendered here -->
+            </div>
+
+            <div class="export-buttons">
+                <button class="btn btn-primary" id="btn-copy-json">Copy as JSON</button>
+                <button class="btn btn-secondary" id="btn-download-csv">Download CSV</button>
+                <button class="btn btn-secondary" id="btn-copy-datajs">Copy as data.js format</button>
+            </div>
+
+            <div class="form-group mt-lg">
+                <label class="form-label">Export Output</label>
+                <textarea class="export-output" id="export-output" readonly
+                    placeholder="Click an export button to see output here..."></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Admin Script -->
+    <script src="data.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>
