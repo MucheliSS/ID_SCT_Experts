@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TTSH ID MO SCT Expert Panel Marking Interface">
+    <title>SCT Expert Marking | TTSH ID</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E👨‍⚕️%3C/text%3E%3C/svg%3E">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <span class="header__badge">Expert Panel</span>
+            <div class="header__logo">TTSH Infectious Diseases Department</div>
+            <h1 class="header__title">Script Concordance Test</h1>
+            <p class="header__subtitle">Expert Marking Interface</p>
+        </header>
+
+        <!-- Section 1: Introduction & Expert Info -->
+        <section id="intro" class="section active">
+            <div class="card">
+                <h2 class="card__title">
+                    <svg class="card__title-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                    </svg>
+                    About This Assessment
+                </h2>
+                <ul class="instructions">
+                    <li>You are part of an expert panel establishing the scoring rubric for this SCT</li>
+                    <li>Each case presents a clinical scenario followed by diagnostic or management considerations</li>
+                    <li>Rate how each new piece of information affects the clinical hypothesis</li>
+                    <li>Your responses will be aggregated with other experts to create the scoring key</li>
+                    <li>There are no strictly "right" or "wrong" answers - we are capturing expert variation</li>
+                    <li>Complete all 10 cases (30 items)</li>
+                    <li>Estimated time: 25-30 minutes</li>
+                </ul>
+
+                <div class="scale-legend">
+                    <div class="scale-legend__item">
+                        <span class="scale-legend__value" style="color: var(--scale-negative-2)">-2</span>
+                        <span class="scale-legend__label">Greatly weakened / Very unlikely / Strongly
+                            contraindicated</span>
+                    </div>
+                    <div class="scale-legend__item">
+                        <span class="scale-legend__value" style="color: var(--scale-negative-1)">-1</span>
+                        <span class="scale-legend__label">Slightly weakened / Unlikely / Not indicated</span>
+                    </div>
+                    <div class="scale-legend__item">
+                        <span class="scale-legend__value" style="color: var(--scale-neutral)">0</span>
+                        <span class="scale-legend__label">No effect / Neutral</span>
+                    </div>
+                    <div class="scale-legend__item">
+                        <span class="scale-legend__value" style="color: var(--scale-positive-1)">+1</span>
+                        <span class="scale-legend__label">Strengthened / Likely / Indicated</span>
+                    </div>
+                    <div class="scale-legend__item">
+                        <span class="scale-legend__value" style="color: var(--scale-positive-2)">+2</span>
+                        <span class="scale-legend__label">Greatly strengthened / Very likely / Strongly indicated</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card__title">
+                    <svg class="card__title-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                    Expert Information
+                </h2>
+
+                <form id="expert-form">
+                    <div class="form-group">
+                        <label class="form-label" for="expert-name">Full Name *</label>
+                        <input type="text" id="expert-name" class="form-input" placeholder="Enter your full name"
+                            required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="expert-specialty">Specialty / Subspecialty *</label>
+                            <select id="expert-specialty" class="form-select" required>
+                                <option value="">Select specialty</option>
+                                <option value="General Infectious Diseases">General Infectious Diseases</option>
+                                <option value="Tropical Medicine">Tropical Medicine</option>
+                                <option value="ID Intensivist">ID Intensivist</option>
+                                <option value="HIV Medicine">HIV Medicine</option>
+                                <option value="Transplant ID">Transplant ID</option>
+                                <option value="Infection Control">Infection Control</option>
+                                <option value="Antimicrobial Stewardship">Antimicrobial Stewardship</option>
+                                <option value="Research/Academic">Research/Academic</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="years-experience">Years of ID Experience *</label>
+                            <input type="number" id="years-experience" class="form-input" placeholder="e.g., 10" min="1"
+                                max="50" required>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-lg">
+                        <button type="submit" class="btn btn-primary">
+                            Begin Marking
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Section 2: Marking Cases -->
+        <section id="marking" class="section">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-bar__fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progress-text">Case 1 of 10 • 0/30 items marked</div>
+            </div>
+
+            <div id="case-container">
+                <!-- Cases will be rendered here by JavaScript -->
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" class="btn btn-secondary" id="btn-prev" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                    </svg>
+                    Previous Case
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-next">
+                    Next Case
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+                    </svg>
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-submit" style="display: none;">
+                    Submit Responses
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Section 3: Completion -->
+        <section id="complete" class="section">
+            <div class="card completion">
+                <div class="completion__icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                </div>
+                <h2 class="completion__title">Thank You!</h2>
+                <p class="completion__message">
+                    Your expert responses have been recorded. Your input will be aggregated with other panel members to
+                    create the scoring rubric for the TTSH ID MO Script Concordance Test.
+                </p>
+                <p class="completion__message text-muted mt-lg">
+                    You may now close this window.
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Google Apps Script URL Configuration -->
+    <script>
+        // IMPORTANT: Replace this URL with your deployed Google Apps Script web app URL
+        // See README.md for setup instructions
+        window.GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+    </script>
+
+    <!-- Application Scripts -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
